@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:5173", "http://localhost:5174"}, allowCredentials = "true")
 @Tag(name = "Authentication", description = "Authentication & Authorization APIs")
 @RequiredArgsConstructor
 public class AuthController {
@@ -108,7 +109,7 @@ public class AuthController {
     private void setRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
         Cookie cookie = new Cookie("refreshToken", refreshToken);
         cookie.setHttpOnly(true);
-        cookie.setSecure(true); // Set to true in production with HTTPS
+        cookie.setSecure(false); // DEVELOPMENT MODE: Set to false for HTTP (localhost). Use true in production with HTTPS
         cookie.setPath("/");
         cookie.setMaxAge(7 * 24 * 60 * 60); // 7 days
         response.addCookie(cookie);
@@ -117,7 +118,7 @@ public class AuthController {
     private void clearRefreshTokenCookie(HttpServletResponse response) {
         Cookie cookie = new Cookie("refreshToken", null);
         cookie.setHttpOnly(true);
-        cookie.setSecure(true);
+        cookie.setSecure(false); // DEVELOPMENT MODE: Set to false for HTTP (localhost). Use true in production with HTTPS
         cookie.setPath("/");
         cookie.setMaxAge(0);
         response.addCookie(cookie);
