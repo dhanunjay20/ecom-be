@@ -76,8 +76,14 @@ public class AuthService {
         // Save user
         user = userRepository.save(user);
 
-        // Send verification email
-        emailService.sendVerificationEmail(user.getEmail(), verificationToken, user.getFirstName());
+        // Send verification email (non-blocking - don't fail if email fails)
+        try {
+            emailService.sendVerificationEmail(user.getEmail(), verificationToken, user.getFirstName());
+            log.info("Verification email sent to: {}", user.getEmail());
+        } catch (Exception e) {
+            log.error("Failed to send verification email to: {}. Registration will continue.", user.getEmail(), e);
+            // Don't throw - allow registration to succeed even if email fails
+        }
 
         // Generate tokens
         String accessToken = tokenProvider.generateAccessToken(user.getEmail());
@@ -109,8 +115,8 @@ public class AuthService {
             throw new UnauthorizedException("Account is temporarily locked. Please try again later.");
         }
 
-        // Check if account is active
-        if (user.getStatus() != UserStatus.ACTIVE) {
+        // Check if account is active or pending (allow login for pending users)
+        if (user.getStatus() != UserStatus.ACTIVE && user.getStatus() != UserStatus.PENDING) {
             throw new UnauthorizedException("Account is " + user.getStatus().name().toLowerCase());
         }
 
