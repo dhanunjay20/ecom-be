@@ -17,6 +17,7 @@ A comprehensive, production-ready RESTful API for a dual-portal e-commerce platf
 - ✅ **Vendor Portal** - Vendor registration, product management, analytics
 - ✅ **Coupon System** - Discount coupons with validation
 - ✅ **Email Notifications** - Transactional emails via SMTP/SendGrid
+- ✅ **GCP Storage** - Google Cloud Storage for product images with vendor-specific folders
 
 ### Security Features
 - 🔐 JWT access tokens (15 min expiry) and refresh tokens (7 days)
@@ -34,10 +35,16 @@ A comprehensive, production-ready RESTful API for a dual-portal e-commerce platf
 - 📝 Comprehensive API documentation (Swagger/OpenAPI)
 - 🔄 ModelMapper for DTO conversions
 - 📧 Email service with templating
-- ☁️ AWS S3 integration for file uploads (ready to implement)
+- ☁️ Google Cloud Storage for product images with vendor-specific folders
 - 💳 Stripe payment gateway (ready to implement)
 - 🔍 Advanced product search and filtering
 - 📱 Social OAuth (Google, GitHub) - ready to implement
+
+## 📚 Additional Documentation
+
+- **[GCP Storage Setup Guide](ecom/GCP_CREDENTIALS_SETUP.md)** - Complete guide to set up Google Cloud Storage credentials
+- **[GCP Storage Implementation Summary](ecom/GCP_STORAGE_IMPLEMENTATION_SUMMARY.md)** - Overview of the storage implementation
+- **[Storage Quick Start](ecom/STORAGE_QUICKSTART.md)** - Quick start guide for storage features
 
 ## 📋 Prerequisites
 

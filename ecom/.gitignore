@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### GCP Credentials ###
+src/main/resources/gcp-credentials.json
+gcp-credentials.json
+**/gcp-credentials.json
+
