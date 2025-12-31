@@ -11,7 +11,9 @@ import com.tcon.ecom.exception.UnauthorizedException;
 import com.tcon.ecom.model.User;
 import com.tcon.ecom.model.enums.UserRole;
 import com.tcon.ecom.model.enums.UserStatus;
+import com.tcon.ecom.model.enums.VendorStatus;
 import com.tcon.ecom.repository.UserRepository;
+import com.tcon.ecom.repository.VendorRepository;
 import com.tcon.ecom.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +35,7 @@ import java.util.UUID;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final VendorRepository vendorRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider tokenProvider;
     private final AuthenticationManager authenticationManager;
@@ -180,7 +183,24 @@ public class AuthService {
         user.setEmailVerified(true);
         user.setEmailVerificationToken(null);
         user.setEmailVerificationExpiry(null);
+
+        // Activate user account after email verification
+        user.setStatus(UserStatus.ACTIVE);
+
         userRepository.save(user);
+
+        // If user is a vendor, approve the vendor profile
+        if (user.getRole() == UserRole.VENDOR && user.getVendorProfile() != null) {
+            vendorRepository.findById(user.getVendorProfile()).ifPresent(vendor -> {
+                vendor.setStatus(VendorStatus.APPROVED);
+                vendor.setApprovedAt(LocalDateTime.now());
+                vendor.setApprovedBy("SYSTEM"); // Auto-approved on email verification
+                vendorRepository.save(vendor);
+                log.info("Vendor profile approved for user: {}", user.getEmail());
+            });
+        }
+
+        log.info("Email verified and account activated for: {}", user.getEmail());
 
         // Send welcome email
         emailService.sendWelcomeEmail(user.getEmail(), user.getFirstName());
