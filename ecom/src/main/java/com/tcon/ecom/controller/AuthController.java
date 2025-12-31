@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:5173", "http://localhost:5174"}, allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:5173", "http://localhost:5174", "https://ecom.tconsolutions.com", "https://ecomvendor.tconsolutions.com"}, allowCredentials = "true")
 @Tag(name = "Authentication", description = "Authentication & Authorization APIs")
 @RequiredArgsConstructor
 public class AuthController {
@@ -40,6 +40,13 @@ public class AuthController {
     public ResponseEntity<ApiResponse<String>> verifyEmail(@Valid @RequestBody VerifyEmailRequest request) {
         authService.verifyEmail(request.getToken());
         return ResponseEntity.ok(ApiResponse.success("Email verified successfully", null));
+    }
+
+    @GetMapping("/verify-email")
+    @Operation(summary = "Verify email address via GET (for email links)")
+    public ResponseEntity<ApiResponse<String>> verifyEmailGet(@RequestParam String token) {
+        authService.verifyEmail(token);
+        return ResponseEntity.ok(ApiResponse.success("Email verified successfully. You can now login.", null));
     }
 
     @PostMapping("/login")

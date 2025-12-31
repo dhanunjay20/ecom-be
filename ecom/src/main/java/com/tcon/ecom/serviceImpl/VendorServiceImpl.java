@@ -118,11 +118,28 @@ public class VendorServiceImpl implements VendorService {
 
         // Send verification email
         try {
+            log.info("📧 Sending verification email to: {}", user.getEmail());
             emailService.sendVerificationEmail(user.getEmail(), verificationToken, user.getFirstName());
-            log.info("Verification email sent to: {}", user.getEmail());
+            log.info("✅ Verification email sent successfully!");
         } catch (Exception e) {
-            log.error("Failed to send verification email", e);
+            log.error("❌ Failed to send verification email", e);
         }
+
+        log.info("╔════════════════════════════════════════════════════════════════════════════╗");
+        log.info("║              REGISTRATION SUMMARY                                          ║");
+        log.info("╠════════════════════════════════════════════════════════════════════════════╣");
+        log.info("║ Email: {}                                     ", user.getEmail());
+        log.info("║ User ID: {}                                  ", user.getId());
+        log.info("║ Vendor ID: {}                                ", vendor.getId());
+        log.info("║ User Status: {}                                                 ", user.getStatus());
+        log.info("║ Vendor Status: {}                                               ", vendor.getStatus());
+        log.info("║ Email Verified: {}                                                     ", user.getEmailVerified());
+        log.info("║ Can Login: NO (Email verification required)                               ║");
+        log.info("║                                                                            ║");
+        log.info("║ ⏳ NEXT STEP: Check email and click verification link                      ║");
+        log.info("╚════════════════════════════════════════════════════════════════════════════╝");
+
+        log.info("Vendor registration completed successfully for: {}", request.getEmail());
 
         // Build response
         VendorResponse response = VendorResponse.builder()
